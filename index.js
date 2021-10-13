@@ -41,6 +41,8 @@ app.get('/users/:id', (req, res) =>{
       const password = req.body.password
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync(password, salt)
+
+      //ToDo: Add hash to user object and then push to user array
       res.send(hash)
  })
  //creat to add a new schedule. It will return the newly created schdule
