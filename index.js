@@ -9,21 +9,44 @@ const PORT = process.env.PORT || 3000
 app.use(express.json()) 
 app.use(express.urlencoded({extended: true}))
 
+//Set View Engine
+app.set('view engine', 'ejs')
+
+//Set static folder
+app.use(express.static('public'))
+
 //ROUTES
 //S-2- 2 : Create the first routes to return all the informatin-(WELCOME)
 app.get('/', (req, res) => {
-  res.send("Welcome to our schedule website.")
+  res.render('pages/home')
 
 })
 //S-2-- 2 : Create the first routes to return all the informatin(GET USERS)
 app.get('/users',(req, res) => {
-   res.send(data.users)
+  // res.send(data.users)
+  res.render('pages/users', {
+   users: data.users
+
+  })
 
 })
 //s-2-- 2 : Create the first routes to return all the informatin(GET SCHEDULES)
 app.get('/schedules', (req, res) => {
-    res.send(data.schedules)
+    //res.send(data.schedules)
+    res.render('pages/schedules',{
+       schedules: data.schedules 
+    })
 })
+
+app.get('/users/new', (req, res) =>{
+    res.render('pages/new-users')
+       
+  })
+  app.get('/schedules/new', (req, res) =>{
+    res.render('pages/new-schedules')
+       
+  })
+
 //S-3-- : Create parameterized routes(get individual users)
      // route parameters--req.params
 app.get('/users/:id', (req, res) =>{
@@ -32,6 +55,8 @@ app.get('/users/:id', (req, res) =>{
     
     res.send(user)
 })
+
+
 //S-3(get  URL '/users/2/schedu -t of all schedules for use)
 //------------------------------//
 
@@ -42,18 +67,35 @@ app.get('/users/:id', (req, res) =>{
       const salt = bcrypt.genSaltSync(10)
       const hash = bcrypt.hashSync(password, salt)
 
-      //ToDo: Add hash to user object and then push to user array
-      res.send(hash)
+      //TODO: Add hash to user object and then push to user array
+       data.users.push({
+       firstname : req.body.firstname,
+       lastname: req.body.lastname,
+       email: req.body.email,
+       password: hash
+
+       }) 
+
+      res.redirect('/users')
  })
  //creat to add a new schedule. It will return the newly created schdule
  app.post('/schedules',(req, res) => {
     //TODO: Validate Data
 
      //add schedule to all schedules
-     data.schedules.push()
-    res.send(req.body)
+    
 
+    data.schedules.push({
+        user_id : req.body.user_id,
+        day: req.body.day,
+        start_at: req.body.start_at,
+        end_at: req.body.end_at
+    
+        }) 
+    
+       res.redirect('/schedules')
 })
+
 
 
 //CRUD-            Create, Read, Update,    Delete
