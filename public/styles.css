@@ -1,4 +1,22 @@
 body{
 
-    background-color: rgb(117, 112, 124);
+    background-color: rgb(197, 188, 209);
+}
+
+main{
+
+    display: flex;
+    text-align-last: justify;
+    padding: 5px;
+}
+div{
+   padding: 5px;
+
+}
+button{
+
+    border-radius: 10px;
+    background-color: rgb(77, 46, 88);
+    color: white;
+    height: 30px
 }
