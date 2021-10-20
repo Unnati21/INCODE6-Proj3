@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcryptjs')
+const morgan = require('morgan')
 const data =  require('./data')
 const app = express()// invoke express in order to create an instance
 
@@ -9,11 +10,16 @@ const PORT = process.env.PORT || 3000
 app.use(express.json()) 
 app.use(express.urlencoded({extended: true}))
 
-//Set View Engine
+// Loging Middleware
+app.use(morgan('dev'))
+
+//Set view engine
+
 app.set('view engine', 'ejs')
 
 //Set static folder
 app.use(express.static('public'))
+
 
 //ROUTES
 //S-2- 2 : Create the first routes to return all the informatin-(WELCOME)
@@ -32,21 +38,20 @@ app.get('/users',(req, res) => {
 })
 //s-2-- 2 : Create the first routes to return all the informatin(GET SCHEDULES)
 app.get('/schedules', (req, res) => {
-    //res.send(data.schedules)
-    res.render('pages/schedules',{
-       schedules: data.schedules 
-    })
+   // res.send(data.schedules)
+   res.render('pages/schedules',{
+    schedules: data.schedules 
+ })
 })
 
 app.get('/users/new', (req, res) =>{
-    res.render('pages/new-users')
-       
-  })
-  app.get('/schedules/new', (req, res) =>{
-    res.render('pages/new-schedules')
-       
-  })
+  res.render('pages/new-users')
 
+})
+app.get('/schedules/new', (req, res) =>{
+  res.render('pages/new-schedules')
+
+})
 //S-3-- : Create parameterized routes(get individual users)
      // route parameters--req.params
 app.get('/users/:id', (req, res) =>{
@@ -55,29 +60,38 @@ app.get('/users/:id', (req, res) =>{
     
     res.send(user)
 })
+//S-3--(get  URL '/users/2/schedu of all schedules for use)(use of fillter to get the particular array)
+app.get('/users/:id/schedules', (req, res) => {
+  const schedules = data.schedules.filter(schedule => schedule.user_id === Number(req.params.id))
+   //TODO: Validate, If array has data, than send it ,otherwise ,show error
+    // let isnotValid = true
+  // if(isnotValid){
+    // console.log(req.params.id + "It is not Valid")
+     //res.send("It is not Valid")
 
+   //}
+  res.send(schedules)
 
-//S-3(get  URL '/users/2/schedu -t of all schedules for use)
-//------------------------------//
+})
 
 //S-4 : Create routes to update (Create new user)
- app.post('/users',(req, res) => {
-     // USing bcryptsjs
-      const password = req.body.password
-      const salt = bcrypt.genSaltSync(10)
-      const hash = bcrypt.hashSync(password, salt)
+app.post('/users',(req, res) => {
+  // USing bcryptsjs
+   const password = req.body.password
+   const salt = bcrypt.genSaltSync(10)
+   const hash = bcrypt.hashSync(password, salt)
 
-      //TODO: Add hash to user object and then push to user array
-       data.users.push({
-       firstname : req.body.firstname,
-       lastname: req.body.lastname,
-       email: req.body.email,
-       password: hash
+   //TODO: Add hash to user object and then push to user array
+    data.users.push({
+    firstname : req.body.firstname,
+    lastname: req.body.lastname,
+    email: req.body.email,
+    password: hash
 
-       }) 
+    }) 
 
-      res.redirect('/users')
- })
+   res.redirect('/users')
+})
  //creat to add a new schedule. It will return the newly created schdule
  app.post('/schedules',(req, res) => {
     //TODO: Validate Data
@@ -95,7 +109,6 @@ app.get('/users/:id', (req, res) =>{
     
        res.redirect('/schedules')
 })
-
 
 
 //CRUD-            Create, Read, Update,    Delete
