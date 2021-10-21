@@ -1,6 +1,8 @@
 body{
 
     background-color: rgb(197, 188, 209);
+    text-align: center;
+
 }
 
 main{
@@ -8,6 +10,8 @@ main{
     display: flex;
     text-align-last: justify;
     padding: 5px;
+    align-items:center;
+     justify-content:center
 }
 div{
    padding: 5px;
