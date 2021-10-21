@@ -4,13 +4,13 @@
   "description": "Mr Coffee Scheduling Web App.",
   "main": "index.js",
   "scripts": {
-    "create_db":"psql -U postgres -f sql/create_db.sql ",
+    "create_db": "psql -U postgres -f sql/create_db.sql ",
     "create_table": "psql -U postgres -d mr_coffee_schedule -f sql/create_table.sql",
     "seed_table": "psql -U postgres -d mr_coffee_schedule -f sql/seed_table.sql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git", 
+    "type": "git",
     "url": "git+https://github.com/Unnati21/INCODE6-Proj3.git"
   },
   "author": "Unnati Parikh",
@@ -23,7 +23,8 @@
     "bcryptjs": "^2.4.3",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "pg-promise": "^10.11.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
