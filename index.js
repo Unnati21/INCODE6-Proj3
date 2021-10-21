@@ -72,8 +72,8 @@ app.get('/schedules/new', (req, res) =>{
 app.get('/users/:id', (req, res) =>{
    //TODO: Validate req.params.id
     const user = data.users[Number(req.params.id)]
-    
-    res.send(user)
+
+   
 })
 //S-3--(get  URL '/users/2/schedu of all schedules for use)(use of fillter to get the particular array)
 app.get('/users/:id/schedules', (req, res) => {
@@ -110,13 +110,14 @@ app.post('/users',(req, res) => {
  //creat to add a new schedule. It will return the newly created schdule
  app.post('/schedules',(req, res) => {
     //TODO: Validate Data
+    const {day, start_at, end_at} = req.body
 
      //add schedule to db
      db.none('INSERT INTO schedules (day, start_at, end_at) VALUES ($1, $2, $3);',
      [day, start_at, end_at])
      .then(() => {
-        // success -what do we want to do
-        res.redirect('/schedules?message=Schedule+added')
+        // success 
+        res.redirect('/schedules?message=schedule+added')
      })
     .catch((error) => {
       console.log(error)
@@ -126,7 +127,7 @@ app.post('/users',(req, res) => {
     })
     //data.schedules.push({
         //user_id : req.body.user_id,
-       // day: req.body.day,
+        //day: req.body.day,
        // start_at: req.body.start_at,
         //end_at: req.body.end_at
     
