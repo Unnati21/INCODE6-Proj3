@@ -50,8 +50,7 @@ app.get('/schedules', (req, res) => {
   })
   .catch((error) => {
     console.log(error)
-    res.send(error)
-    // TODO: render out error on error page
+ 
     res.redirect("/error?message=" + error.message)
   })
 })
@@ -121,8 +120,8 @@ app.post('/users',(req, res) => {
      })
     .catch((error) => {
       console.log(error)
-      res.send(error)
-      //TO DO:render out error page
+      
+      res.redirect("/error?message=" + error.message)
     })
     })
     app.get("*", (req, res) => {
