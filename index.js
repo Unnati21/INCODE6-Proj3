@@ -109,11 +109,11 @@ app.post('/users',(req, res) => {
  //creat to add a new schedule. It will return the newly created schdule
  app.post('/schedules',(req, res) => {
     //TODO: Validate Data
-    const {day, start_at, end_at} = req.body
+    const {username, day, start_at, end_at} = req.body
 
      //add schedule to db
-     db.none('INSERT INTO schedules (day, start_at, end_at) VALUES ($1, $2, $3);',
-     [day, start_at, end_at])
+     db.none('INSERT INTO schedules (username, day, start_at, end_at) VALUES ($1, $2, $3, $4);',
+     [username,day, start_at, end_at])
      .then(() => {
         // success 
         res.redirect('/schedules?message=schedule+added')
