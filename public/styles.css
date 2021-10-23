@@ -2,6 +2,7 @@ body{
 
     background-color: rgb(174, 220, 238);
     text-align: center;
+    font-family:Arial, Helvetica, sans-serif;
    
 }
 
@@ -10,14 +11,45 @@ main{
 
     display: flex;
     text-align-last: justify;
-    padding: 5px;
+    padding: 20px;
     align-items:center;
      justify-content:center
 }
+table{
+
+    border-collapse: collapse;
+  width: 100%;
+  border: 5px solid #ddd;
+
+}
+
+#employee td, #employee th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+th, td {
+    text-align: left;
+    padding: 8px;
+  }
+  tr:nth-child(even){background-color: #f2f2f2}
+  tr:hover {background-color: #ddd;}
+  th {
+    background-color: #163944;
+    color: white;
+  }
+form{
+    padding: 20px;
+}
+
 div{
    padding: 5px;
-   
+   border: outset;
 }
+input, select{
+    background-color: darkgrey;
+}
+
 button{
 
     border-radius: 10px;

@@ -44,19 +44,19 @@ app.get('/schedules', (req, res) => {
    .then((schedules) =>{
      console.log(schedules)
      res.render('pages/schedules',{
-      schedules 
-     
-   })
-   })
-   .catch((error) => {
-     console.log(error)
-     res.send(error)
-     // TODO: render out error on error page  
-   })
-
-
-
+      schedules, 
+      message: req.query.message
+    })
+  })
+  .catch((error) => {
+    console.log(error)
+    res.send(error)
+    // TODO: render out error on error page
+    res.redirect("/error?message=" + error.message)
+  })
 })
+     
+   
 
 app.get('/users/new', (req, res) =>{
   res.render('pages/new-users')
@@ -124,6 +124,11 @@ app.post('/users',(req, res) => {
       res.send(error)
       //TO DO:render out error page
     })
+    })
+    app.get("*", (req, res) => {
+      res.render('pages/error', {
+        message: req.query.message || "This page cannot be found"
+      })
     })
     //data.schedules.push({
         //user_id : req.body.user_id,
