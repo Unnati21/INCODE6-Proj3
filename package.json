@@ -7,6 +7,7 @@
     "create_db": "psql -U postgres -f sql/create_db.sql ",
     "create_table": "psql -U postgres -d mr_coffee_schedule -f sql/create_table.sql",
     "seed_table": "psql -U postgres -d mr_coffee_schedule -f sql/seed_table.sql",
+    "setup_db": "npm run create_db && npm run create_table && npm run seed_table",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
