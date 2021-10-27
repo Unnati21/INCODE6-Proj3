@@ -2,8 +2,14 @@ const express = require('express')
 const bcrypt = require('bcryptjs')
 const morgan = require('morgan')
 const ejs = require('ejs')
-const db = require('./database')
-const data =  require('./data')
+
+//const data =  require('./data')
+const homeRouter = require('./routes/home')
+const schedulesRouter = require('./routes/schedules')
+const usersRouter = require('./routes/users')
+const errorRouter = require('./routes/error') 
+
+
 const app = express()// invoke express in order to create an instance
 
 const PORT = process.env.PORT || 3000
@@ -28,82 +34,24 @@ app.use(express.static('public'))
 
 //ROUTES
 //S-2- 2 : Create the first routes to return all the informatin-(WELCOME)
-app.get('/', (req, res) => {
-  res.render('pages/home')
+app.use('/schedules', schedulesRouter)
+app.use('/users', usersRouter)
+app.use('/', homeRouter)
+app.use('*', errorRouter)
 
-})
 //S-2-- 2 : Create the first routes to return all the informatin(GET USERS)
-app.get('/users',(req, res) => {
-  db.any('SELECT * FROM users;')
-  .then((users) => {
-    console.log(users)
-    
-    res.render('pages/users', {
-      name:users.firstname + users.lastname,
-      users
-    })
 
-  })
-  .catch((error) => {
-    console.log(error)
-    res.redirect('/error?message=' + error.message)
-  })
- 
-})
 //s-2-- 2 : Create the first routes to return all the informatin(GET SCHEDULES)
-app.get('/schedules', (req, res) => {
-   // res.send(data.schedules)
-   db.any("SELECT user_id, username, day,TO_CHAR(start_at, 'HH12:MIAM') start_at, To_CHAR(end_at, 'HH12:MIAM') end_at FROM schedules;")
-   .then((schedules) =>{
-     console.log(schedules)
-     res.render('pages/schedules',{
-       
-      schedules, 
-      message: req.query.message
-    })
-  })
-  .catch((error) => {
-    console.log(error)
- 
-    res.redirect("/error?message=" + error.message)
-  })
-})
-     
+
    
 
-app.get('/users/new', (req, res) =>{
-  res.render('pages/new-users')
 
-})
 // get new schedule
-app.get('/schedules/new', (req, res) =>{
-  res.render('pages/new-schedules')
 
-})
 
 //S-3-- : Create parameterized routes(get individual users)
      // route parameters--req.params
-app.get('/users/:id', (req, res) =>{
-   //TODO: Validate req.params.id
-   // const user = data.users[Number(req.params.id)]
-   
 
-   db.any('SELECT * FROM users WHERE id = $1', [Number(req.params.id)+1])
-   
-   .then((users) => {
-     console.log(users)
-     res.render('pages/user',{
-       id : (users.length)-1,
-       users
-     })
-     
-   })
-   .catch((error) => {
-     console.log(error)
-     res.redirect('/error?message=' + error.message)
-   })
-   
- })
 //S-3--(get  URL '/users/2/schedu of all schedules for use)(use of fillter to get the particular array)
 app.get('/users/:id/schedules', (req, res) => {
   const schedules = data.schedules.filter(schedule => schedule.user_id === Number(req.params.id))
@@ -119,24 +67,7 @@ app.get('/users/:id/schedules', (req, res) => {
 })
 
 //S-4 : Create routes to update (Create new user)
-app.post('/users',(req, res) => {
-  const {firstname,lastname,email,password} = req.body
-  // USing bcryptsjs
-   
-   const salt = bcrypt.genSaltSync(10)
-   const hash = bcrypt.hashSync(password, salt)
-   req.body.password = hash
 
-   db.none('INSERT INTO users (firstname, lastname, email, password) VALUES ($1, $2, $3, $4);', [firstname, lastname, email, hash])
-  .then(() => {
-    res.redirect('/users?message=Post+successfully+added')
-  })
-  .catch((error) => {
-    console.log(error)
-    res.redirect('/error?message=' + error.message)
-  })
-  
-})
 
    //TODO: Add hash to user object and then push to user array
    // data.users.push({
@@ -150,49 +81,14 @@ app.post('/users',(req, res) => {
   // res.redirect('/users')
 //})
  //creat to add a new schedule. It will return the newly created schdule
- app.post('/schedules',(req, res) => {
-    //TODO: Validate Data
-    const {username, day, start_at, end_at} = req.body
+ 
+   
 
-     //add schedule to db
-     db.none('INSERT INTO schedules (username, day, start_at, end_at) VALUES ($1, $2, $3, $4);',
-     [username,day, start_at, end_at])
-     .then(() => {
-        // success 
-        res.redirect('/schedules?message=schedule+added')
-     })
-    .catch((error) => {
-      console.log(error)
-      
-      res.redirect("/error?message=" + error.message)
-    })
-    })
-    //(get individual Schedule)
-    app.get('/schedules/:id', (req,res) => {
-      db.any("SELECT user_id, username, day, TO_CHAR(start_at, 'HH12:MIAM') start_at,  TO_CHAR(end_at, 'HH12:MIAM') AS end_at  FROM schedules WHERE user_id=$1",[Number(req.params.id)])
-      .then((schedules) => {
-        console.log(schedules)
-        res.render('pages/schedule', {
-          
-          id:Number(req.params.id),
-          
-          schedules
-        })
-      })
-      .catch((error) => {
-        console.log(error)
-        res.redirect('/error?message=' + error.message)
-      })
-      
-          
-    })
-
-
-    app.get("*", (req, res) => {
+    /*app.get("*", (req, res) => {
       res.render('pages/error', {
         message: req.query.message || "This page cannot be found"
       })
-    })
+    })*/
 
   
     //data.schedules.push({
